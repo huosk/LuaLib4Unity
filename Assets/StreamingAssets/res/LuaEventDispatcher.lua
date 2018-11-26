@@ -187,7 +187,7 @@ end
 
 ---创建事件表
 ---@return Event
-function modele.CreateEventTable()
+function module.CreateEventTable()
     return CreateEventTable()
 end
 
