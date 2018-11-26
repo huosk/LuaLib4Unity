@@ -29,6 +29,8 @@ function module:FindEvent(eventName)
 end
 
 ---创建事件表
+---@param eventName
+---@return Event
 local function CreateEventTable(eventName)
 
     ---@class Event
@@ -181,6 +183,12 @@ function module:GetEventCount()
         end
         return count
     end
+end
+
+---创建事件表
+---@return Event
+function modele.CreateEventTable()
+    return CreateEventTable()
 end
 
 return module
