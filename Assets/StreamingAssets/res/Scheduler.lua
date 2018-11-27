@@ -6,10 +6,11 @@
 
 ---@class ScheduleManager
 local scheduler = {}
-local ticker = CS.UnityEventDispatcher.instance
 
 ---@type ScheduleEntry[]
 local schedulEntries = {}
+
+local logger = require("Logger")
 
 --创建新的任务
 ---@param delay number 任务执行延迟时间-s
@@ -59,7 +60,10 @@ local function CreateSchedulEntry(delay, callback)
     local function run(self)
         running = true
         if self.callback ~= nil then
-            self.callback()
+            local success,error = pcall(self.callback)
+            if not success then
+                logger:Error(error)
+            end
         end
     end
 
@@ -165,17 +169,8 @@ local function UnityUpdate(deltaTime)
     TickSchedules(deltaTime)
 end
 
----对应 Unity LateUpdate 函数
-local function UnityLateUpdate()
-end
-
----对应 Unity FixedUpdate 函数
-local function UnityFixedUpdate()
-end
-
 --与 unity 事件进行绑定
-ticker.onUpdate = UnityUpdate
-ticker.onLateUpdate = UnityLateUpdate
-ticker.onFixedUpdate = UnityFixedUpdate
+local ticker = require("UnityTicker")
+ticker:StartListenUpdate(UnityUpdate)
 
 return scheduler
