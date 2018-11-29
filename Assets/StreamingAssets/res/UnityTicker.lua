@@ -8,6 +8,8 @@ local ticker = CS.UnityEventDispatcher.instance
 local tbUtil = require("Util.TableUtil")
 local logger = require("Logger")
 
+---创建Ticker
+---@return UnityTicker
 local function UnityTicker()
 
     ---@type TickEntry[]
@@ -32,10 +34,10 @@ local function UnityTicker()
         ---执行存储的方法
         function entry:Tick()
             if self.func then
-                local success,error = pcall(self.func,self.state)
-                if not success then
-                    logger:Error(error)
-                end
+                xpcall(self.func, function(err)
+                    logger:Error(tostring(err).."\n"..debug.traceback())
+                    return err
+                end,self.state)
             end
         end
 
